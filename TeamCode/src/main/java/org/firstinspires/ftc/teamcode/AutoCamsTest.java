@@ -30,11 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -43,10 +44,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import java.util.List;
+
 
 
 import java.util.List;
@@ -61,22 +61,37 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "AutoCamsTest", group = "Concept")
 
 public class AutoCamsTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
     private double ringcondition = 5;
+    private double WereShouldIDropWobble = 0;
     private ElapsedTime timmer = new ElapsedTime();
     private DcMotor leftbackDrive = null;
     private DcMotor rightbackDrive = null;
     private DcMotor leftfrontDrive = null;
     private DcMotor rightfrontDrive = null;
+    private DcMotorSimple leftIntake = null;
+    private DcMotorSimple rightIntake = null;
+    private DcMotorSimple RotateIntake = null;
+    private Servo servoGrab = null;
+    private double servoGrabOpen =0.8;
+    private double servoGrabClose =0.135;
+    private Servo servoHold = null;
+    private double servoHoldOpen =1;
+    private double servoHoldClose =0;
+    private DcMotorSimple rightRotate = null;
+    private DcMotorSimple leftRotate = null;
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
-    double globalAngle, power = .30, correction;
-    boolean aButton, bButton;
+    double globalAngle, correction;
+    private double power_level = 0.5;
+    private double power_zero = 0;
+    private double shooter_speed = -0.535;
+    private double intake_speed = 1.0;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -109,13 +124,39 @@ public class AutoCamsTest extends LinearOpMode {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
 
+
+        //Set up motors
+        leftbackDrive  = hardwareMap.get(DcMotor.class, "leftbackdrive");
+        rightbackDrive = hardwareMap.get(DcMotor.class, "rightbackdrive");
+        leftfrontDrive  = hardwareMap.get(DcMotor.class, "leftfrontdrive");
+        rightfrontDrive = hardwareMap.get(DcMotor.class, "rightfrontdrive");
+        leftIntake = hardwareMap.get(DcMotorSimple.class, "leftIntake");
+        rightIntake = hardwareMap.get(DcMotorSimple.class, "rightIntake");
+        RotateIntake = hardwareMap.get(DcMotorSimple.class, "RotateIntake");
+        servoGrab = hardwareMap.get(Servo.class, "servoGrab");
+        servoHold = hardwareMap.get(Servo.class, "servoHold");
+
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+
+        leftbackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightbackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftfrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightfrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        RotateIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        servoGrab.setPosition(servoGrabOpen);
+        servoGrab.setDirection(Servo.Direction.REVERSE) ;
+        servoHold.setPosition(servoHoldClose);
+        servoHold.setDirection(Servo.Direction.REVERSE) ;
+
         // Setup Gyro
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
@@ -175,6 +216,7 @@ public class AutoCamsTest extends LinearOpMode {
 
                         if (updatedRecognitions.size() < 1) {
                             ringcondition = 0;
+                            WereShouldIDropWobble = 200;
                         }
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
@@ -187,9 +229,11 @@ public class AutoCamsTest extends LinearOpMode {
 
                             if (recognition.getLabel() == "Single") {
                                 ringcondition = 1;
+                                WereShouldIDropWobble = 500;
                             }
                             if (recognition.getLabel() == "Quad") {
                                 ringcondition = 4;
+                                WereShouldIDropWobble = 800;
                             }
                         }
                         telemetry.update();
@@ -205,43 +249,112 @@ public class AutoCamsTest extends LinearOpMode {
             telemetry.addData("State", "Ring Seen (%.2f)", ringcondition);
             telemetry.update();
 
-            if (ringcondition == 1) {
-                while (timmer.milliseconds() < 500) {
-                    correction = checkDirection();
-                    leftbackDrive.setPower(0.3 - correction);
-                    rightbackDrive.setPower(-0.3 + correction);
-                    leftfrontDrive.setPower(-0.3 - correction);
-                    rightfrontDrive.setPower(0.3 + correction);
-                }
-            }
-            if (ringcondition == 4) ;{
-                while (timmer.milliseconds() < 500) {
-                    correction = checkDirection();
-                    leftbackDrive.setPower(-0.3 - correction);
-                    rightbackDrive.setPower(0.3 + correction);
-                    leftfrontDrive.setPower(0.3 - correction);
-                    rightfrontDrive.setPower(-0.3 + correction);
-                }
-            }
-            if (ringcondition == 0) ;{
-            while (timmer.milliseconds() < 500) {
+            // Drive Forward to shoot
+            timmer.reset();
+            while (timmer.milliseconds() < 1250) {
                 correction = checkDirection();
-                leftbackDrive.setPower(-0.3 - correction);
-                rightbackDrive.setPower(0.3 + correction);
-                leftfrontDrive.setPower(0.3 - correction);
-                rightfrontDrive.setPower(-0.3 + correction);
+                leftbackDrive.setPower(power_level - correction);
+                rightbackDrive.setPower(power_level + correction);
+                leftfrontDrive.setPower(power_level - correction);
+                rightfrontDrive.setPower(power_level + correction);
+                rightIntake.setPower(shooter_speed);
             }
-        }
+
+            timmer.reset();
+            while (timmer.milliseconds() < 650) {
+                correction = checkDirection();
+                leftbackDrive.setPower(-power_level - correction);
+                rightbackDrive.setPower(power_level + correction);
+                leftfrontDrive.setPower(power_level - correction);
+                rightfrontDrive.setPower(-power_level + correction);
+            }
+
+            //First shot
+            leftbackDrive.setPower(0);
+            rightbackDrive.setPower(0);
+            leftfrontDrive.setPower(0);
+            rightfrontDrive.setPower(0);
+            sleep(500);
+            leftIntake.setPower(intake_speed);
+            sleep(400);
+            leftIntake.setPower(0);
+
+            timmer.reset();
+            while (timmer.milliseconds() < 200) {
+                correction = checkDirection();
+                leftbackDrive.setPower(-power_level - correction);
+                rightbackDrive.setPower(power_level + correction);
+                leftfrontDrive.setPower(power_level - correction);
+                rightfrontDrive.setPower(-power_level + correction);
+            }
+            //Second shot
+            leftbackDrive.setPower(0);
+            rightbackDrive.setPower(0);
+            leftfrontDrive.setPower(0);
+            rightfrontDrive.setPower(0);
+            sleep(200);
+            leftIntake.setPower(intake_speed);
+            sleep(500);
+            leftIntake.setPower(0);
+
+            timmer.reset();
+            while (timmer.milliseconds() < 200) {
+                correction = checkDirection();
+                leftbackDrive.setPower(-power_level - correction);
+                rightbackDrive.setPower(power_level + correction);
+                leftfrontDrive.setPower(power_level - correction);
+                rightfrontDrive.setPower(-power_level + correction);
+            }
+            //Third shot
+            leftbackDrive.setPower(0);
+            rightbackDrive.setPower(0);
+            leftfrontDrive.setPower(0);
+            rightfrontDrive.setPower(0);
+            leftIntake.setPower(intake_speed);
+            sleep(1500);
+            leftIntake.setPower(0);
+            rightIntake.setPower(0);
+
+            //Getting on 1 of axis of the square were the wobbles should go
+            timmer.reset();
+            while (timmer.milliseconds() < WereShouldIDropWobble) {
+                correction = checkDirection();
+                leftbackDrive.setPower(power_level - correction);
+                rightbackDrive.setPower(power_level + correction);
+                leftfrontDrive.setPower(power_level - correction);
+                rightfrontDrive.setPower(power_level + correction);
+            }
+
+            // Stop and drop wobble goal
+            leftbackDrive.setPower(0);
+            rightbackDrive.setPower(0);
+            leftfrontDrive.setPower(0);
+            rightfrontDrive.setPower(0);
+            sleep(750);
+            servoHold.setPosition(servoHoldClose);
+            // Mechanum to drop wobble goal
+            timmer.reset();
+            while (timmer.milliseconds() < 2000) {
+                correction = checkDirection();
+                leftbackDrive.setPower(power_level - correction);
+                rightbackDrive.setPower(-power_level + correction);
+                leftfrontDrive.setPower(-power_level - correction);
+                rightfrontDrive.setPower(power_level+ correction);
+            }
+
+
+            // Drive back to line to park
+            timmer.reset();
+            while (timmer.milliseconds() < WereShouldIDropWobble-190) {
+                correction = checkDirection();
+                leftbackDrive.setPower(-power_level - correction);
+                rightbackDrive.setPower(-power_level + correction);
+                leftfrontDrive.setPower(-power_level - correction);
+                rightfrontDrive.setPower(-power_level + correction);
+            }
         }
 
     }
-
-
-
-
-
-
-
 
 
 
@@ -310,7 +423,7 @@ public class AutoCamsTest extends LinearOpMode {
                 correction = -angle;        // reverse sign of angle for correction.
 
             correction = correction * gain;
-
+            correction = 0;
             return correction;
 
         }

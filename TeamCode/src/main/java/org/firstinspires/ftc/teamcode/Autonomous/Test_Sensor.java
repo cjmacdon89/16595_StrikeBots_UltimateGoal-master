@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -23,7 +23,7 @@ import java.util.Locale;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Test_Sensor", group = "TeleOp")
+//@TeleOp(name = "Test_Sensor", group = "TeleOp")
                            // Comment this out to add to the opmode list
 public class Test_Sensor extends LinearOpMode {
 

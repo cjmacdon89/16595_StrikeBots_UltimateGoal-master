@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -17,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Auto_Grab_Block_Red_Test", group="")
-public class Auto_Grab_Block_Red_Test extends LinearOpMode {
+//@Autonomous(name="Auto_Grab_Block_Blue_Test", group="")
+public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
 
     // Variable declaration
     private DistanceSensor sensorRange;
@@ -216,6 +216,8 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
         rightbackDrive.setPower(0);
         leftfrontDrive.setPower(0);
         rightfrontDrive.setPower(0);
+        leftRotate.setPower(0);
+        rightRotate.setPower(0);
         RotatePower = 0.6;
         RotateIntake.setPower(RotatePower);
         sleep(500);
@@ -226,22 +228,22 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
 
         if (Brain == 1) {
 
-            timelenght = (2750/4*3);
+            timelenght = (2200/4*3);
 
         }
         if (Brain == 2) {
 
-            timelenght = (1750/4*3);
+            timelenght = (1700/4*3);
 
         }
 
         timmer.reset();
         while (timmer.milliseconds() < timelenght-100) {
             correction = checkDirection();
-            leftbackDrive.setPower(-0.45- correction);
-            rightbackDrive.setPower(0.45 + correction);
-            leftfrontDrive.setPower(0.45 - correction);
-            rightfrontDrive.setPower(-0.45 + correction);
+            leftbackDrive.setPower(0.45- correction);
+            rightbackDrive.setPower(-0.45 + correction);
+            leftfrontDrive.setPower(-0.45 - correction);
+            rightfrontDrive.setPower(0.45 + correction);
         }
         RotatePower = -0.5;
         RotateIntake.setPower(RotatePower);
@@ -257,21 +259,21 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
         rightRotate.setPower(-0.0);
 
         timmer.reset();
-        while (timmer.milliseconds() < (timelenght+(2800/4*3))) {
+        while (timmer.milliseconds() < (timelenght+(2700/4*3))) {
             correction = checkDirection();
-            leftbackDrive.setPower(0.45 - correction);
-            rightbackDrive.setPower(-0.45 + correction);
-            leftfrontDrive.setPower(-0.45 - correction);
-            rightfrontDrive.setPower(0.45 + correction);
+            leftbackDrive.setPower(-0.45 - correction);
+            rightbackDrive.setPower(0.45 + correction);
+            leftfrontDrive.setPower(0.45 - correction);
+            rightfrontDrive.setPower(-0.45 + correction);
         }
         RotatePower = 0;
         RotateIntake.setPower(RotatePower);
         leftRotate.setPower(0.75);
         rightRotate.setPower(0.75);
 
-        if (Brain == 1) {
+        if (Brain == 2) {
             timmer.reset();
-            while (timmer.milliseconds() < 1600) {
+            while (timmer.milliseconds() < 1800) {
                 correction = checkDirection();
                 leftbackDrive.setPower(0.15- correction);
                 rightbackDrive.setPower(0.15 + correction);
@@ -279,23 +281,23 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
                 rightfrontDrive.setPower(0.15 + correction);
             }
             timmer.reset();
-            while (timmer.milliseconds() < 1400) {
+            while (timmer.milliseconds() < 1200) {
                 correction = checkDirection();
-                leftbackDrive.setPower(0.1);
-                rightbackDrive.setPower(0.2);
-                leftfrontDrive.setPower(0.1);
-                rightfrontDrive.setPower(0.2);
+                leftbackDrive.setPower(0.2);
+                rightbackDrive.setPower(0.1);
+                leftfrontDrive.setPower(0.2);
+                rightfrontDrive.setPower(0.1);
             }
             timmer.reset();
             while (timmer.milliseconds() < 200) {
                 correction = checkDirection();
-                leftbackDrive.setPower(-0.14);
-                rightbackDrive.setPower(-0.15);
-                leftfrontDrive.setPower(-0.14);
-                rightfrontDrive.setPower(-0.15);
+                leftbackDrive.setPower(-0.15);
+                rightbackDrive.setPower(-0.14);
+                leftfrontDrive.setPower(-0.15);
+                rightfrontDrive.setPower(-0.14);
             }
         }
-        if (Brain > 1 ) {
+        if (Brain < 2 || Brain > 2) {
             // Move Forward to blocks
             timmer.reset();
             while (timmer.milliseconds() < 2700) {
@@ -331,10 +333,10 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
         timmer.reset();
         while (timmer.milliseconds() < (timelenght+(1900/4*3))) {
             correction = checkDirection();
-            leftbackDrive.setPower(-0.45 - correction);
-            rightbackDrive.setPower(0.45 + correction);
-            leftfrontDrive.setPower(0.45 - correction);
-            rightfrontDrive.setPower(-0.45 + correction);
+            leftbackDrive.setPower(0.45 - correction);
+            rightbackDrive.setPower(-0.45 + correction);
+            leftfrontDrive.setPower(-0.45 - correction);
+            rightfrontDrive.setPower(0.45 + correction);
         }
         leftbackDrive.setPower(0);
         rightbackDrive.setPower(0);
@@ -354,12 +356,12 @@ public class Auto_Grab_Block_Red_Test extends LinearOpMode {
 
 
         timmer.reset();
-        while (timmer.milliseconds() < (800)) {
+        while (timmer.milliseconds() < (1000)) {
             correction = checkDirection();
-            leftbackDrive.setPower(0.45 - correction);
-            rightbackDrive.setPower(-0.45 + correction);
-            leftfrontDrive.setPower(-0.45 - correction);
-            rightfrontDrive.setPower(0.45 + correction);
+            leftbackDrive.setPower(-0.45 - correction);
+            rightbackDrive.setPower(0.45 + correction);
+            leftfrontDrive.setPower(0.45 - correction);
+            rightfrontDrive.setPower(-0.45 + correction);
         }
 
 

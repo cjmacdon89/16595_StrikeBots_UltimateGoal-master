@@ -1,19 +1,19 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+        import com.qualcomm.hardware.bosch.BNO055IMU;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="Test_gyro", group="TeleOp")
-public class Test_gyro extends LinearOpMode {
+//@TeleOp(name="Ultimate_Goal_Driver_Control", group="TeleOp")
+public class Ultimate_Goal_Driver_Control extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftbackDrive = null;
@@ -102,8 +102,6 @@ public class Test_gyro extends LinearOpMode {
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.left_stick_x;
             double mechanum = gamepad1.right_stick_x;
-
-
             correction = checkDirection(Direction_set);
 
             // Sets power range, and allows mid program power change
@@ -119,22 +117,11 @@ public class Test_gyro extends LinearOpMode {
             frontleftPower   = Range.clip(drive + turn + mechanum, -1.0*maxPower, maxPower) ;
             frontrightPower   = Range.clip(drive - turn - mechanum, -1.0*maxPower, maxPower) ;
 
-            if (turn>0.15 && turn<-0.15){
-                leftbackDrive.setPower(backleftPower);
-                rightbackDrive.setPower(backrightPower);
-                leftfrontDrive.setPower(frontleftPower);
-                rightfrontDrive.setPower(frontrightPower);
-
-                Direction_set = getAngle();
-
-            } else {
-
-                leftbackDrive.setPower(backleftPower - correction);
-                rightbackDrive.setPower(backrightPower + correction);
-                leftfrontDrive.setPower(frontleftPower - correction);
-                rightfrontDrive.setPower(frontrightPower + correction);
-            }
-
+            // Send calculated power to wheels
+            leftbackDrive.setPower(backleftPower - correction);
+            rightbackDrive.setPower(backrightPower + correction);
+            leftfrontDrive.setPower(frontleftPower - correction);
+            rightfrontDrive.setPower(frontrightPower + correction);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="Elevator_Test", group="TeleOp")
+//@TeleOp(name="Elevator_Test", group="TeleOp")
 public class Elevator_Test extends LinearOpMode {
 
     // Declare OpMode members.
@@ -16,8 +16,11 @@ public class Elevator_Test extends LinearOpMode {
     private DcMotor leftbackDrive = null;
     private double elevator_motion;
     private Servo servoArm = null;
-    private double servoArmDown =1;
-    private double servoArmUp =0;
+    private double servoArmDown =0.5;
+    private double servoArmUp =0.15;
+    private Servo servoHolder = null;
+    private double servoHolderDown =1;
+    private double servoHolderUp =0;
 
     @Override
     public void runOpMode() {
@@ -36,6 +39,10 @@ public class Elevator_Test extends LinearOpMode {
         servoArm = hardwareMap.get(Servo.class, "servoarm");
         servoArm.setPosition(servoArmDown);
         servoArm.setDirection(Servo.Direction.REVERSE) ;
+
+        servoHolder = hardwareMap.get(Servo.class, "servoHolder");
+        servoHolder.setPosition(servoHolderDown);
+        servoHolder.setDirection(Servo.Direction.REVERSE) ;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -69,6 +76,17 @@ public class Elevator_Test extends LinearOpMode {
                 servoArm .setPosition(servoArmUp);
             }
 
+            //Just for testing the holder for start of game.
+
+            if(gamepad2.x){
+                servoHolder .setPosition(servoHolderDown);
+            }
+            else{
+                servoHolder.setPosition(servoHolder.getPosition());
+            }
+            if(gamepad2.b){
+                servoHolder .setPosition(servoHolderUp);
+            }
 
         }
 

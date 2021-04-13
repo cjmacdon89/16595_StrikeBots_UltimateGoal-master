@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 // Autonomous program to grab tray and but into building zone then park robot under bridge.
 //Program uses timmer for distance control and gyro to correct path
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="Tray_Move_Back_Blue_Gyro", group="")
+//@Autonomous(name="Tray_Move_Back_Blue_Gyro", group="")
 public class Tray_Move_Blue_Start_Gyro extends LinearOpMode {
 
     // Variable declaration

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -27,40 +26,38 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Mechanum_Skybot_Test_Servo", group="TeleOp")
-public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
+@TeleOp(name="Mechanum_Two", group="TeleOp")
+public class Mechanum_Skybot_Two_Controllers extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftbackDrive = null;
-    private DcMotor rightbackDrive = null;
-    private DcMotor leftfrontDrive = null;
-    private DcMotor rightfrontDrive = null;
-    private NormalizedColorSensor colorSensor=null;
-    private double maxPower = 0.3;
-    private DcMotorSimple leftIntake = null;
-    private DcMotorSimple rightIntake = null;
-    private double leftIntakePower = 0;
-    private double rightIntakePower = 0;
-    private boolean intake = false;
-    private DcMotorSimple RotateIntake = null;
-    private double leftRotatePower = 0;
-    private double rightRotatePower = 0;
-    private boolean rotate = false;
-    private ColorSensor colorSensor_1;
-    private ColorSensor colorSensor_2;
-    private DistanceSensor sensorRange;
-    private Servo servoArm = null;
-    private double servoArmDown =1;
-    private double servoArmUp =0;
+        private DcMotor leftbackDrive = null;
+        private DcMotor rightbackDrive = null;
+        private DcMotor leftfrontDrive = null;
+        private DcMotor rightfrontDrive = null;
+        private NormalizedColorSensor colorSensor=null;
+        private double maxPower = 0.3;
+        private DcMotorSimple leftIntake = null;
+        private DcMotorSimple rightIntake = null;
+        private double leftIntakePower = 0;
+        private double rightIntakePower = 0;
+        private boolean intake = false;
+        private DcMotorSimple RotateIntake = null;
+        private double leftRotatePower = 0;
+        private double rightRotatePower = 0;
+        private boolean rotate = false;
+        private ColorSensor colorSensor_1;
+        private ColorSensor colorSensor_2;
+        private DistanceSensor sensorRange;
 
-    @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        // values is a reference to the hsvValues array.
-        float[] hsvValues = new float[3];
-        final float values[] = hsvValues;
+        @Override
+        public void runOpMode() {
+            telemetry.addData("Status", "Initialized");
+            telemetry.update();
+
+            // values is a reference to the hsvValues array.
+            float[] hsvValues = new float[3];
+            final float values[] = hsvValues;
 
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -73,14 +70,14 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
         leftIntake = hardwareMap.get(DcMotorSimple.class, "leftIntake");
         rightIntake = hardwareMap.get(DcMotorSimple.class, "rightIntake");
         RotateIntake = hardwareMap.get(DcMotorSimple.class, "RotateIntake");
-        servoArm = hardwareMap.get(Servo.class, "servoarm");
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
-        colorSensor_1 = hardwareMap.get(ColorSensor.class,"coloursensor_1");
-        colorSensor_1.enableLed(true);
-        colorSensor_2 = hardwareMap.get(ColorSensor.class,"coloursensor_2");
-        colorSensor_2.enableLed(true);
+            sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+            Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+
+            colorSensor_1 = hardwareMap.get(ColorSensor.class,"coloursensor_1");
+            colorSensor_1.enableLed(true);
+            colorSensor_2 = hardwareMap.get(ColorSensor.class,"coloursensor_2");
+            colorSensor_2.enableLed(true);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -91,8 +88,7 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
         leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
         RotateIntake.setDirection(DcMotorSimple.Direction.FORWARD);
-        servoArm.setPosition(servoArmDown);
-        servoArm.setDirection(Servo.Direction.REVERSE) ;
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -127,9 +123,9 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
             double mechanum = gamepad1.right_stick_x;
 
             if(gamepad1.left_bumper) {
-                maxPower = 0.6;
+                maxPower = 1.0;
             } else {
-                maxPower = 0.3;
+                maxPower = 1.0;
             }
 
             backleftPower   = Range.clip(drive + turn - mechanum, -1.0*maxPower, maxPower) ;
@@ -143,22 +139,11 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
             leftfrontDrive.setPower(frontleftPower);
             rightfrontDrive.setPower(frontrightPower);
 
-            //Servo for Capestone preload
-            if(gamepad1.a){
-                servoArm .setPosition(servoArmDown);
-            }
-            else{
-                servoArm.setPosition(servoArm.getPosition());
-            }
-            if(gamepad1.b){
-                servoArm .setPosition(servoArmUp);
-            }
-
             //set up intake power
             if(gamepad2.y) {
                 intake = true;
-                leftIntakePower = 0.6;
-                rightIntakePower = 0.6;
+                leftIntakePower = 1.0;
+                rightIntakePower = 1.0;
                 leftIntake.setPower(leftIntakePower);
                 rightIntake.setPower(rightIntakePower);
             } else {
@@ -189,7 +174,7 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
 
             if(gamepad2.a) {
                 rotate = true;
-                rightRotatePower = 0.8;
+                rightRotatePower = 1.0;
                 RotateIntake.setPower(rightRotatePower);
             } else {
                 leftRotatePower = 0;
@@ -197,7 +182,7 @@ public class Mechanum_Skybot_Test_Servo extends LinearOpMode {
             }
             if(gamepad2.b){
                 rotate = true;
-                rightRotatePower = -0.6;
+                rightRotatePower = -1.0;
                 RotateIntake.setPower(rightRotatePower);
             } else {
                 leftRotatePower = 0;

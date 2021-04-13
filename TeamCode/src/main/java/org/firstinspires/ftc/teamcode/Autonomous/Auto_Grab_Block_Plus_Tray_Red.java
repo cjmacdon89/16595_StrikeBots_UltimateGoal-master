@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -17,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Auto_Grab_Block_Blue_Test", group="")
-public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
+//@Autonomous(name="Auto_Grab_Block_Plus_Tray_Red ", group="")
+public class Auto_Grab_Block_Plus_Tray_Red extends LinearOpMode {
 
     // Variable declaration
     private DistanceSensor sensorRange;
@@ -38,7 +38,7 @@ public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
     private double Colour_Blue = 0;
     private double Colour_Green = 0;
     private double Brain = 3;
-    private double timelenght = (2000/4*3);
+    private double timelenght = (4250);
     private ElapsedTime timmer = new ElapsedTime();
     private ColorSensor colorSensor_1;
     private ColorSensor colorSensor_2;
@@ -135,7 +135,7 @@ public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
 
             Brain = 1;
             timmer.reset();
-            while (timmer.milliseconds() < 500) {
+            while (timmer.milliseconds() < 600) {
                 correction = checkDirection();
                 leftbackDrive.setPower(0.3 - correction);
                 rightbackDrive.setPower(-0.3 + correction);
@@ -163,7 +163,7 @@ public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
             }
 
         }
-        //foun block move back
+
         timmer.reset();
         while (timmer.milliseconds() < 920) {
             correction = checkDirection();
@@ -179,7 +179,7 @@ public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
         rightfrontDrive.setPower(0);
 
         //Move arm down
-        RotatePower = -0.5;
+        RotatePower = -0.3;
         RotateIntake.setPower(RotatePower);
         sleep(750);
         RotatePower = 0;
@@ -201,178 +201,177 @@ public class Auto_Grab_Block_Blue_Test extends LinearOpMode {
         rightbackDrive.setPower(0);
         leftfrontDrive.setPower(0);
         rightfrontDrive.setPower(0);
-        leftRotate.setPower(0);
-        rightRotate.setPower(0);
 
         timmer.reset();
-        while (timmer.milliseconds() < 800) {
+        while (timmer.milliseconds() < 600) {
             correction = checkDirection();
             leftbackDrive.setPower(-0.3 - correction);
             rightbackDrive.setPower(-0.3 + correction);
             leftfrontDrive.setPower(-0.3 - correction);
             rightfrontDrive.setPower(-0.3 + correction);
         }
+        leftRotate.setPower(0);
+        rightRotate.setPower(0);
         leftbackDrive.setPower(0);
         rightbackDrive.setPower(0);
         leftfrontDrive.setPower(0);
         rightfrontDrive.setPower(0);
-        leftRotate.setPower(0);
-        rightRotate.setPower(0);
-        RotatePower = 0.6;
+        RotatePower = 0.5;
         RotateIntake.setPower(RotatePower);
-        sleep(500);
+        sleep(750);
         RotatePower = 0;
         RotateIntake.setPower(RotatePower);
-        sleep(250);
-
-
         if (Brain == 1) {
 
-            timelenght = (2200/4*3);
+            timelenght = (4750);
 
         }
         if (Brain == 2) {
 
-            timelenght = (1700/4*3);
+            timelenght = (3750);
 
         }
 
         timmer.reset();
-        while (timmer.milliseconds() < timelenght-100) {
+        while (timmer.milliseconds() < timelenght) {
             correction = checkDirection();
-            leftbackDrive.setPower(0.45- correction);
-            rightbackDrive.setPower(-0.45 + correction);
-            leftfrontDrive.setPower(-0.45 - correction);
-            rightfrontDrive.setPower(0.45 + correction);
-        }
-        RotatePower = -0.5;
-        RotateIntake.setPower(RotatePower);
-        sleep(500);
-        RotatePower = 0;
-        RotateIntake.setPower(RotatePower);
-        leftRotate.setPower(-0.75);
-        rightRotate.setPower(-0.75);
-        sleep(500);
-        RotatePower = 0;
-        RotateIntake.setPower(RotatePower);
-        leftRotate.setPower(-0.0);
-        rightRotate.setPower(-0.0);
-
-        timmer.reset();
-        while (timmer.milliseconds() < (timelenght+(2700/4*3))) {
-            correction = checkDirection();
-            leftbackDrive.setPower(-0.45 - correction);
+            leftbackDrive.setPower(-0.45- correction);
             rightbackDrive.setPower(0.45 + correction);
             leftfrontDrive.setPower(0.45 - correction);
             rightfrontDrive.setPower(-0.45 + correction);
         }
+
+        timmer.reset();
+        while (timmer.milliseconds() < (1500)){
+            correction = checkDirection();
+            leftbackDrive.setPower(0.2 - correction);
+            rightbackDrive.setPower(0.2 + correction);
+            leftfrontDrive.setPower(0.2- correction);
+            rightfrontDrive.setPower(0.2  + correction);
+        }
+        leftbackDrive.setPower(0);
+        rightbackDrive.setPower(0);
+        leftfrontDrive.setPower(0);
+        rightfrontDrive.setPower(0);
+        RotatePower = -0.5;
+        RotateIntake.setPower(RotatePower);
+        sleep(1000);
         RotatePower = 0;
         RotateIntake.setPower(RotatePower);
-        leftRotate.setPower(0.75);
-        rightRotate.setPower(0.75);
 
-        if (Brain == 2) {
-            timmer.reset();
-            while (timmer.milliseconds() < 1800) {
-                correction = checkDirection();
-                leftbackDrive.setPower(0.15- correction);
-                rightbackDrive.setPower(0.15 + correction);
-                leftfrontDrive.setPower(0.15 - correction);
-                rightfrontDrive.setPower(0.15 + correction);
-            }
-            timmer.reset();
-            while (timmer.milliseconds() < 1200) {
-                correction = checkDirection();
-                leftbackDrive.setPower(0.2);
-                rightbackDrive.setPower(0.1);
-                leftfrontDrive.setPower(0.2);
-                rightfrontDrive.setPower(0.1);
-            }
-            timmer.reset();
-            while (timmer.milliseconds() < 200) {
-                correction = checkDirection();
-                leftbackDrive.setPower(-0.15);
-                rightbackDrive.setPower(-0.14);
-                leftfrontDrive.setPower(-0.15);
-                rightfrontDrive.setPower(-0.14);
-            }
-        }
-        if (Brain < 2 || Brain > 2) {
-            // Move Forward to blocks
-            timmer.reset();
-            while (timmer.milliseconds() < 2700) {
-                correction = checkDirection();
-                leftbackDrive.setPower(0.15 - correction);
-                rightbackDrive.setPower(0.15 + correction);
-                leftfrontDrive.setPower(0.15 - correction);
-                rightfrontDrive.setPower(0.15 + correction);
+        RotatePower = 0;
+        RotateIntake.setPower(RotatePower);
+        leftRotate.setPower(-0.5);
+        rightRotate.setPower(-0.5);
+        sleep(500);
+        leftRotate.setPower(0.0);
+        rightRotate.setPower(0.0);
+        leftbackDrive.setPower(0.2 - correction);
+        rightbackDrive.setPower(0.2 + correction);
+        leftfrontDrive.setPower(0.2- correction);
+        rightfrontDrive.setPower(0.2  + correction);
+        sleep(500);
+        RotatePower = -0.8;
+        RotateIntake.setPower(RotatePower);
+        sleep(200);
+        leftbackDrive.setPower(0);
+        rightbackDrive.setPower(0);
+        leftfrontDrive.setPower(0);
+        rightfrontDrive.setPower(0);
 
-            }
+        // Move Back with Tray
+        timmer.reset();
+        while (timmer.milliseconds() < (500))
+        {
+            correction = checkDirection();
+            leftbackDrive.setPower(-0.2 - correction);
+            rightbackDrive.setPower(-0.2 + correction);
+            leftfrontDrive.setPower(-0.2 - correction);
+            rightfrontDrive.setPower(-0.2 + correction);
         }
         timmer.reset();
-        while (timmer.milliseconds() < 750) {
+        while (timmer.milliseconds() < (3000))
+        {
+            correction = checkDirection();
+            leftbackDrive.setPower(-0.5 - correction);
+            rightbackDrive.setPower(-0.5 + correction);
+            leftfrontDrive.setPower(-0.5 - correction);
+            rightfrontDrive.setPower(-0.5 + correction);
+        }
+        // Spin tray
+        timmer.reset();
+        while (timmer.milliseconds() < 2000)
+        {
+            leftbackDrive.setPower(0.6 );
+            rightbackDrive.setPower(-0.6 );
+            leftfrontDrive.setPower(-0.6) ;
+            rightfrontDrive.setPower(0.6 );
+        }
+        // Move forward
+        timmer.reset();
+        while (timmer.milliseconds() < (1500))
+        {
+            correction = checkDirection();
+            leftbackDrive.setPower(+0.5);
+            rightbackDrive.setPower(+0.5 );
+            leftfrontDrive.setPower(+0.5 );
+            rightfrontDrive.setPower(+0.5);
+        }
+        // Stop and lift arm off platform
+        leftbackDrive.setPower(0);
+        rightbackDrive.setPower(0);
+        leftfrontDrive.setPower(0);
+        rightfrontDrive.setPower(0);
+        RotatePower = 0.6;
+        RotateIntake.setPower(RotatePower);
+        sleep(750);
+        RotatePower = 0;
+        RotateIntake.setPower(RotatePower);
+
+        //Move Robot from behind platform
+        timmer.reset();
+        while (timmer.milliseconds() < 1500)
+        {
             correction = checkDirection();
             leftbackDrive.setPower(-0.3 - correction);
             rightbackDrive.setPower(-0.3 + correction);
             leftfrontDrive.setPower(-0.3 - correction);
             rightfrontDrive.setPower(-0.3 + correction);
         }
-        leftbackDrive.setPower(0);
-        rightbackDrive.setPower(0);
-        leftfrontDrive.setPower(0);
-        rightfrontDrive.setPower(0);
-        leftRotate.setPower(0);
-        rightRotate.setPower(0);
-
-        RotatePower = 0.5;
-        RotateIntake.setPower(RotatePower);
-        sleep(500);
-        RotatePower = 0;
-        RotateIntake.setPower(RotatePower);
-
+        //Stop before other robot on line if parked
         timmer.reset();
-        while (timmer.milliseconds() < (timelenght+(1900/4*3))) {
+        while (timmer.milliseconds() < 1000)
+        {
             correction = checkDirection();
-            leftbackDrive.setPower(0.45 - correction);
-            rightbackDrive.setPower(-0.45 + correction);
-            leftfrontDrive.setPower(-0.45 - correction);
-            rightfrontDrive.setPower(0.45 + correction);
+            leftbackDrive.setPower(0.3 - correction);
+            rightbackDrive.setPower(-0.3 + correction);
+            leftfrontDrive.setPower(-0.3 - correction);
+            rightfrontDrive.setPower(0.3 + correction);
+        }
+        //Go up
+        timmer.reset();
+        while (timmer.milliseconds() < 750)
+        {
+            correction = checkDirection();
+            leftbackDrive.setPower(0.4 - correction);
+            rightbackDrive.setPower(0.4 + correction);
+            leftfrontDrive.setPower(0.4 - correction);
+            rightfrontDrive.setPower(0.4 + correction);
+        }
+        //Park on line
+        timmer.reset();
+        while (timmer.milliseconds() < 1950)
+        {
+            correction = checkDirection();
+            leftbackDrive.setPower(0.3 - correction);
+            rightbackDrive.setPower(-0.3 + correction);
+            leftfrontDrive.setPower(-0.3 - correction);
+            rightfrontDrive.setPower(0.3 + correction);
         }
         leftbackDrive.setPower(0);
         rightbackDrive.setPower(0);
         leftfrontDrive.setPower(0);
         rightfrontDrive.setPower(0);
-        RotatePower = -0.5;
-        RotateIntake.setPower(RotatePower);
-        sleep(500);
-        leftRotate.setPower(-0.75);
-        rightRotate.setPower(-0.75);
-        sleep(500);
-        RotatePower = 0.5;
-        RotateIntake.setPower(RotatePower);
-        sleep(500);
-        RotatePower = 0;
-        RotateIntake.setPower(RotatePower);
-
-
-        timmer.reset();
-        while (timmer.milliseconds() < (1000)) {
-            correction = checkDirection();
-            leftbackDrive.setPower(-0.45 - correction);
-            rightbackDrive.setPower(0.45 + correction);
-            leftfrontDrive.setPower(0.45 - correction);
-            rightfrontDrive.setPower(-0.45 + correction);
-        }
-
-
-        leftbackDrive.setPower(0);
-        rightbackDrive.setPower(0);
-        leftfrontDrive.setPower(0);
-        rightfrontDrive.setPower(0);
-        leftRotate.setPower(0);
-        rightRotate.setPower(0);
-        RotatePower = 0;
-        RotateIntake.setPower(RotatePower);
 
     }
 
